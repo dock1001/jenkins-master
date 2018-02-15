@@ -12,7 +12,7 @@ RUN apt-get update \
         ca-certificates \
         curl \
         gnupg2 \
-        software-properties-common
+        software-properties-common \
  && rm -rf /var/lib/apt/lists/*
 
 # Add docker client
@@ -22,7 +22,7 @@ RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID"
     $(lsb_release -cs) \
     stable" \
  && apt-get update \
- && apt-get -q -y install docker-ce
+ && apt-get -q -y install docker-ce \
  && rm -rf /var/lib/apt/lists/*
 
 # Prepare jenkins
