@@ -13,20 +13,17 @@ RUN apt-get update \
         curl \
         gnupg2 \
         software-properties-common \
-        mc
+ && rm -rf /var/lib/apt/lists/*
 
+# Add docker client
 RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey \
  && add-apt-repository \
     "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
     $(lsb_release -cs) \
-    stable"
-RUN apt-get update \
- && apt-get -q -y install docker-ce
-
-# Spring cleaning
-RUN apt-get -q autoremove \
- && apt-get -q clean -y
-
+    stable" \
+ && apt-get update \
+ && apt-get -q -y install docker-ce \
+ && rm -rf /var/lib/apt/lists/*
 
 # Prepare jenkins
 USER jenkins
@@ -37,15 +34,14 @@ COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/executors.groovy
 # Install Jenkins plugins
 RUN install-plugins.sh \
     blueocean \
-    swarm \
-    gerrit-trigger \
-    docker-workflow \
-    locale \
-    workflow-aggregator \
-    pipeline-stage-view \
-    git \
     cloudbees-bitbucket-branch-source \
     dockerhub-notification \
+    docker-workflow \
+    gerrit-trigger \
+    git \
     github-organization-folder \
-    warnings
-
+    locale \
+    pipeline-stage-view \
+    swarm \
+    warnings \
+    workflow-aggregator
