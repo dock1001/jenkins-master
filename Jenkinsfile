@@ -7,8 +7,7 @@ node
     def DOCKERHUB_USERNAME = 'NotDefined'
 
     def IMAGE_TAG          = (env.BRANCH_NAME == 'lts'  ? 'custom-lts' : 'dev-lts')
-    //def IMAGE_TAG_SHORT    = IMAGE_TAG.substring(0,1)
-    //def IMAGE_TAG_REV      = "${IMAGE_TAG_SHORT}${env.BUILD_NUMBER}"
+
   
     def PUSH_BUILD_NUMBER  = (env.BRANCH_NAME == 'lts')
     
@@ -43,7 +42,6 @@ node
 
     stage('Push image') 
     {
-        // We dont push revisions for 'latest' since we only care about latest
         app.push("${IMAGE_TAG}")
     }
 }
