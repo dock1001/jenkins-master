@@ -6,7 +6,7 @@ node
     // some basic config
     def DOCKERHUB_USERNAME = 'NotDefined'
 
-    def IMAGE_TAG          = (env.BRANCH_NAME == 'master'  ? 'custom' : 'dev')
+    def IMAGE_TAG          = (env.BRANCH_NAME == 'master'  ? 'latest' : 'dev')
 
   
     def PUSH_BUILD_NUMBER  = (env.BRANCH_NAME == 'master')
