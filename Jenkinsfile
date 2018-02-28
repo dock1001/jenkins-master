@@ -1,3 +1,4 @@
+#!/usr/bin/env groovy
 // Based on 
 // - https://getintodevops.com/blog/building-your-first-docker-image-with-jenkins-2-guide-for-developers
 // - http://fishi.devtail.io/weblog/2016/11/20/docker-build-pipeline-as-code-jenkins/
