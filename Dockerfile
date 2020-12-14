@@ -43,5 +43,4 @@ RUN install-plugins.sh \
     locale \
     pipeline-stage-view \
     swarm \
-    warnings \
     workflow-aggregator
