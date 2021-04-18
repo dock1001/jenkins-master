@@ -39,7 +39,6 @@ RUN install-plugins.sh \
     docker-workflow \
     gerrit-trigger \
     git \
-    github-organization-folder \
     locale \
     pipeline-stage-view \
     swarm \
