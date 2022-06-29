@@ -32,8 +32,20 @@ USER jenkins
 COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/executors.groovy
 
 # Install Jenkins plugins
-RUN install-plugins.sh \
-    blueocean \
+#RUN install-plugin-cli.sh \
+#    blueocean \
+#    cloudbees-bitbucket-branch-source \
+#    dockerhub-notification \
+#    docker-workflow \
+#    gerrit-trigger \
+#    git \
+#    locale \
+#    pipeline-stage-view \
+#    swarm \
+#    workflow-aggregator
+
+RUN jenkins-plugin-cli.sh \
+    --plugins blueocean \
     cloudbees-bitbucket-branch-source \
     dockerhub-notification \
     docker-workflow \
