@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:latest
+FROM jenkins/jenkins:latest-jdk11
 
 # Install the docker CLI
 # https://getintodevops.com/blog/the-simple-way-to-run-docker-in-docker-for-ci
@@ -32,14 +32,16 @@ USER jenkins
 COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/executors.groovy
 
 # Install Jenkins plugins
-RUN install-plugins.sh \
-    blueocean \
-    cloudbees-bitbucket-branch-source \
-    dockerhub-notification \
-    docker-workflow \
-    gerrit-trigger \
-    git \
-    locale \
-    pipeline-stage-view \
-    swarm \
-    workflow-aggregator
+#RUN install-plugin-cli.sh \
+#    blueocean \
+#    cloudbees-bitbucket-branch-source \
+#    dockerhub-notification \
+#    docker-workflow \
+#    gerrit-trigger \
+#    git \
+#    locale \
+#    pipeline-stage-view \
+#    swarm \
+#    workflow-aggregator
+
+RUN jenkins-plugin-cli --plugins blueocean dockerhub-notification docker-workflow gerrit-trigger git locale pipeline-stage-view swarm workflow-aggregator
