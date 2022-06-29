@@ -44,14 +44,4 @@ COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/executors.groovy
 #    swarm \
 #    workflow-aggregator
 
-RUN jenkins-plugin-cli \
-    --plugins blueocean \
-    cloudbees-bitbucket-branch-source \
-    dockerhub-notification \
-    docker-workflow \
-    gerrit-trigger \
-    git \
-    locale \
-    pipeline-stage-view \
-    swarm \
-    workflow-aggregator
+RUN jenkins-plugin-cli --plugins blueocean dockerhub-notification docker-workflow gerrit-trigger git locale pipeline-stage-view swarm workflow-aggregator
