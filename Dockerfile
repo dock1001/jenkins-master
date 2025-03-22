@@ -26,7 +26,6 @@ RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID"
  && rm -rf /var/lib/apt/lists/*
 
 # Configure Docker to run as non-root user
-RUN groupadd docker
 RUN usermod -aG docker jenkins
 
 # Prepare jenkins
