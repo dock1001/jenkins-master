@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:latest-jdk21
+FROM jenkins/jenkins:lts-jdk17
 
 # Install the docker CLI
 # https://getintodevops.com/blog/the-simple-way-to-run-docker-in-docker-for-ci
@@ -15,15 +15,13 @@ RUN apt-get update \
         software-properties-common \
  && rm -rf /var/lib/apt/lists/*
 
-# Install the Docker CLI
 RUN install -m 0755 -d /etc/apt/keyrings \
- && curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc \
+ && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
  && chmod a+r /etc/apt/keyrings/docker.asc \
  && echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
- && tee /etc/apt/sources.list.d/docker.list > /dev/null \
- && add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable" \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null \
  && apt-get update \
  && apt-get -q -y install docker-ce \
  && rm -rf /var/lib/apt/lists/*
