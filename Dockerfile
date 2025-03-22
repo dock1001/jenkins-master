@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-jdk21
+FROM jenkins/jenkins:lts-jdk17
 
 # Install the docker CLI
 # https://getintodevops.com/blog/the-simple-way-to-run-docker-in-docker-for-ci
@@ -15,15 +15,19 @@ RUN apt-get update \
         software-properties-common \
  && rm -rf /var/lib/apt/lists/*
 
-# Add docker client
-RUN curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg > /tmp/dkey; apt-key add /tmp/dkey \
- && add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-    $(lsb_release -cs) \
-    stable" \
+RUN install -m 0755 -d /etc/apt/keyrings \
+ && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
+ && chmod a+r /etc/apt/keyrings/docker.asc \
+ && echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    tee /etc/apt/sources.list.d/docker.list > /dev/null \
  && apt-get update \
  && apt-get -q -y install docker-ce \
  && rm -rf /var/lib/apt/lists/*
+
+# Configure Docker to run as non-root user
+RUN usermod -aG docker jenkins
 
 # Prepare jenkins
 USER jenkins
