@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:lts-jdk17
+FROM jenkins/jenkins:jdk17
 
 # Install the docker CLI
 # https://getintodevops.com/blog/the-simple-way-to-run-docker-in-docker-for-ci
