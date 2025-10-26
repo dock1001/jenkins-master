@@ -4,24 +4,24 @@ FROM jenkins/jenkins:jdk21
 # https://getintodevops.com/blog/the-simple-way-to-run-docker-in-docker-for-ci
 # Also Inspired by https://github.com/Shimmi/docker-jenkins
 
+# Switch to root to install packages
 USER root
 
+# Install required packages for Docker
 RUN apt-get update \
  && apt-get -y install \
         apt-transport-https \
         ca-certificates \
         curl \
         gnupg2 \
-        software-properties-common \
  && rm -rf /var/lib/apt/lists/*
 
+# Install Docker CLI
 RUN install -m 0755 -d /etc/apt/keyrings \
  && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
  && chmod a+r /etc/apt/keyrings/docker.asc \
- && echo \
-    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
-    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-    tee /etc/apt/sources.list.d/docker.list > /dev/null \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
+    | tee /etc/apt/sources.list.d/docker.list > /dev/null \
  && apt-get update \
  && apt-get -q -y install docker-ce \
  && rm -rf /var/lib/apt/lists/*
@@ -29,7 +29,7 @@ RUN install -m 0755 -d /etc/apt/keyrings \
 # Configure Docker to run as non-root user
 RUN usermod -aG docker jenkins
 
-# Prepare jenkins
+# Switch back to Jenkins user
 USER jenkins
 
 # Set the number of executors
