@@ -1,0 +1,3 @@
+jenkins:
+  # Builds run on agents, not the controller
+  numExecutors: 0

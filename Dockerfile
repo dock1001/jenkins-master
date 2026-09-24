@@ -7,45 +7,28 @@ FROM jenkins/jenkins:jdk21
 # Switch to root to install packages
 USER root
 
-# Install required packages for Docker
+# Install Docker CLI (the daemon is provided by the host via the mounted socket)
 RUN apt-get update \
- && apt-get -y install \
-        apt-transport-https \
-        ca-certificates \
-        curl \
-        gnupg2 \
- && rm -rf /var/lib/apt/lists/*
-
-# Install Docker CLI
-RUN install -m 0755 -d /etc/apt/keyrings \
+ && apt-get -y install --no-install-recommends ca-certificates curl \
+ && install -m 0755 -d /etc/apt/keyrings \
  && curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc \
  && chmod a+r /etc/apt/keyrings/docker.asc \
  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
-    | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    > /etc/apt/sources.list.d/docker.list \
  && apt-get update \
- && apt-get -q -y install docker-ce \
+ && apt-get -y install --no-install-recommends docker-ce-cli docker-buildx-plugin \
  && rm -rf /var/lib/apt/lists/*
 
-# Configure Docker to run as non-root user
-RUN usermod -aG docker jenkins
+# Allow the jenkins user to use the docker socket
+RUN groupadd -f docker && usermod -aG docker jenkins
 
 # Switch back to Jenkins user
 USER jenkins
 
-# Set the number of executors
-COPY executors.groovy /usr/share/jenkins/ref/init.groovy.d/executors.groovy
-
 # Install Jenkins plugins
-#RUN install-plugin-cli.sh \
-#    blueocean \
-#    cloudbees-bitbucket-branch-source \
-#    dockerhub-notification \
-#    docker-workflow \
-#    gerrit-trigger \
-#    git \
-#    locale \
-#    pipeline-stage-view \
-#    swarm \
-#    workflow-aggregator
+COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-RUN jenkins-plugin-cli --plugins blueocean dockerhub-notification docker-workflow gerrit-trigger git locale pipeline-stage-view swarm workflow-aggregator
+# Jenkins Configuration as Code
+ENV CASC_JENKINS_CONFIG=/usr/share/jenkins/ref/casc/jenkins.yaml
+COPY --chown=jenkins:jenkins casc/jenkins.yaml /usr/share/jenkins/ref/casc/jenkins.yaml

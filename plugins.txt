@@ -1,0 +1,10 @@
+configuration-as-code
+dockerhub-notification
+docker-workflow
+gerrit-trigger
+git
+locale
+pipeline-graph-view
+pipeline-stage-view
+swarm
+workflow-aggregator
