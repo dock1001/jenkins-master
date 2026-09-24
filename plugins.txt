@@ -3,6 +3,7 @@ dockerhub-notification
 docker-workflow
 gerrit-trigger
 git
+github-branch-source
 locale
 pipeline-graph-view
 pipeline-stage-view

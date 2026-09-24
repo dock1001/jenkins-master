@@ -1,3 +1,16 @@
 jenkins:
   # Builds run on agents, not the controller
   numExecutors: 0
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          # GitHub App used by multibranch / organization folder jobs.
+          # GITHUB_APP_ID and GITHUB_APP_KEY are read from /run/secrets/<name>
+          # or from environment variables of the same name.
+          - gitHubApp:
+              id: github-app
+              description: GitHub App
+              appID: "${GITHUB_APP_ID}"
+              privateKey: "${GITHUB_APP_KEY}"
