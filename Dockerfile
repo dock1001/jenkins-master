@@ -9,11 +9,9 @@ RUN install -d -o jenkins -g jenkins /var/jenkins_casc
 # Switch back to Jenkins user
 USER jenkins
 
-# Install Jenkins plugins. Download from the Jenkins project's own server, since
-# the default redirect can pick a mirror that the build network can't reach.
+# Install Jenkins plugins
 COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt \
-    --jenkins-update-center-download-url https://archives.jenkins.io/plugins
+RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
 # Jenkins Configuration as Code: the built-in file, plus any JCasC files mounted
 # at /var/jenkins_casc (opt-in, e.g. credentials). The folder is empty by default.
