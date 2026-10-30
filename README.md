@@ -2,7 +2,7 @@
 
 Docker image for the Jenkins LTS controller (JDK 21).
 
-- Docker CLI and buildx installed, using the host's Docker daemon via the mounted socket
+- No Docker in the image. Agents that run Docker builds must provide their own Docker
 - Plugins preinstalled from [plugins.txt](plugins.txt)
 - Configured with [Jenkins Configuration as Code](https://plugins.jenkins.io/configuration-as-code/) from [casc/jenkins.yaml](casc/jenkins.yaml): 0 executors on the controller, so all builds run on agents
 - Credentials are left alone by default. You can opt in to managing them with JCasC, see [Credentials](#credentials-opt-in)
@@ -15,14 +15,6 @@ Docker image for the Jenkins LTS controller (JDK 21).
 | other  | `dev-lts` |
 
 ## Running
-
-### Docker socket access
-
-The `jenkins` user reaches the host's Docker daemon through `/var/run/docker.sock`. The container must be in the group that owns the socket on the host, so pass that group's numeric ID with `--group-add`/`group_add`:
-
-```sh
-stat -c %g /var/run/docker.sock
-```
 
 ### Credentials (opt-in)
 
@@ -64,11 +56,8 @@ services:
     ports:
       - "8080:8080"    # web UI
       - "50000:50000"  # inbound agents
-    group_add:
-      - "999"          # output of: stat -c %g /var/run/docker.sock
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
       # Opt-in credential management; leave these two out to manage credentials in the UI
       - ./casc:/var/jenkins_casc:ro                   # your JCasC files
       - ./secrets:/run/secrets:ro                     # one file per secret, readable by uid 1000
